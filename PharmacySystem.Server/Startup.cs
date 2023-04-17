@@ -2,7 +2,9 @@
 using CodeEngine.WebSocket.Models.User;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using PharmacySystem.Database;
 using System.Net;
 using System.Net.WebSockets;
 using System.Text;
@@ -31,20 +33,17 @@ namespace PharmacySystem.Server
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddAuthorization();
 
-            services.AddDbContext<ApplicationContext>(options =>
+            services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<ICourseService, CourseService>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ICourseAdminService, CourseAdminService>();
-            services.AddTransient<IStatisticService, StatisticService>();
+            
             //services.AddSingleton<CodeEngine.WebSocket.Models.User.UserModel>();
 
             collections = services;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider provider)
+        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider provider)
         {
 
             if (env.IsDevelopment())
@@ -72,7 +71,7 @@ namespace PharmacySystem.Server
                 {
                     var value = context.Request.QueryString.ToString();
                     Guid token = Guid.Empty;
-                    if (!value.IsEmpty() && value != "")
+                    if (!String.IsNullOrWhiteSpace(value))
                     {
                         token = Guid.Parse(value.Replace("?token=", ""));
                     }

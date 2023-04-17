@@ -3,13 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PharmacySystem.Server", "PharmacySystem.Server\PharmacySystem.Server.csproj", "{865FE1C2-BC61-4342-BB42-61EECD8B96E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PharmacySystem.Server", "PharmacySystem.Server\PharmacySystem.Server.csproj", "{865FE1C2-BC61-4342-BB42-61EECD8B96E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PharmacySystem.WebSocket", "PharmacySystem.WebSocket\PharmacySystem.WebSocket.csproj", "{61CDA8B4-ABC8-4D56-A108-C98F26AFC2F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PharmacySystem.WebSocket", "PharmacySystem.WebSocket\PharmacySystem.WebSocket.csproj", "{61CDA8B4-ABC8-4D56-A108-C98F26AFC2F3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{B0F62E65-35AF-4853-8408-FEF550F845EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PharmacySystem.Database", "PharmacySystem.Database\PharmacySystem.Database.csproj", "{CD530F79-6D26-43A8-AF75-C4D6E6CAAEFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PharmacySystem.Database", "PharmacySystem.Database\PharmacySystem.Database.csproj", "{CD530F79-6D26-43A8-AF75-C4D6E6CAAEFA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{47D6D90C-8F86-4A87-8852-18C802BBAC4E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "User", "User", "{330F0CC0-5D8C-439C-A782-62751D7CDA12}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugins.User.Services", "Plugins.User.Services\Plugins.User.Services.csproj", "{DCCC3279-1557-4258-B26A-3DE89AC4F68C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugins.User.Data", "Plugins.User.Data\Plugins.User.Data.csproj", "{AEC3E4F2-E5FF-499B-871C-AD0EE2DFCC0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins.User.IServices", "Plugins.User.IServices\Plugins.User.IServices.csproj", "{4170AE53-F952-4EDF-B9A1-4DC35625DAAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,12 +39,28 @@ Global
 		{CD530F79-6D26-43A8-AF75-C4D6E6CAAEFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD530F79-6D26-43A8-AF75-C4D6E6CAAEFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD530F79-6D26-43A8-AF75-C4D6E6CAAEFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCCC3279-1557-4258-B26A-3DE89AC4F68C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCCC3279-1557-4258-B26A-3DE89AC4F68C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCCC3279-1557-4258-B26A-3DE89AC4F68C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCCC3279-1557-4258-B26A-3DE89AC4F68C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEC3E4F2-E5FF-499B-871C-AD0EE2DFCC0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEC3E4F2-E5FF-499B-871C-AD0EE2DFCC0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEC3E4F2-E5FF-499B-871C-AD0EE2DFCC0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEC3E4F2-E5FF-499B-871C-AD0EE2DFCC0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4170AE53-F952-4EDF-B9A1-4DC35625DAAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4170AE53-F952-4EDF-B9A1-4DC35625DAAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4170AE53-F952-4EDF-B9A1-4DC35625DAAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4170AE53-F952-4EDF-B9A1-4DC35625DAAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CD530F79-6D26-43A8-AF75-C4D6E6CAAEFA} = {B0F62E65-35AF-4853-8408-FEF550F845EC}
+		{330F0CC0-5D8C-439C-A782-62751D7CDA12} = {47D6D90C-8F86-4A87-8852-18C802BBAC4E}
+		{DCCC3279-1557-4258-B26A-3DE89AC4F68C} = {330F0CC0-5D8C-439C-A782-62751D7CDA12}
+		{AEC3E4F2-E5FF-499B-871C-AD0EE2DFCC0A} = {330F0CC0-5D8C-439C-A782-62751D7CDA12}
+		{4170AE53-F952-4EDF-B9A1-4DC35625DAAB} = {330F0CC0-5D8C-439C-A782-62751D7CDA12}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {784EBB8A-27D5-4CB6-953D-96C6A0A994A2}
