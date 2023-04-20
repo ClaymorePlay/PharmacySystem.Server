@@ -1,10 +1,14 @@
 ﻿using CodeEngine.WebSocket.Models.Schema;
 using CodeEngine.WebSocket.Models.User;
+using GaneshaProgramming.Identity;
+using GaneshaProgramming.Plugins.User.IServices;
+using GaneshaProgramming.Plugins.User.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using PharmacySystem.Database;
+using PharmacySystem.WebSocket.Models.Schema;
 using System.Net;
 using System.Net.WebSockets;
 using System.Text;
@@ -13,7 +17,7 @@ namespace PharmacySystem.Server
 {
     public class Startup
     {
-        public static List<WebSocket> CurrentConnections = new List<WebSocket>();
+        public static List<System.Net.WebSockets.WebSocket> CurrentConnections = new List<System.Net.WebSockets.WebSocket>();
 
         public IConfiguration Configuration { get; }
 
@@ -36,7 +40,13 @@ namespace PharmacySystem.Server
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            
+            services.AddDbContext<ApplicationContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<GaneshaProgramming.Plugins.User.Data.DataContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddTransient<IUserService, UserService>();
             //services.AddSingleton<CodeEngine.WebSocket.Models.User.UserModel>();
 
             collections = services;
@@ -81,17 +91,19 @@ namespace PharmacySystem.Server
 
                         if (token != Guid.Empty)
                         {
-                            var service = collections.Where(c => c.ImplementationType != null).First(c => c.ImplementationType.Name == nameof(UserService));
-                            var met = service.ImplementationType.GetMethod("GetByToken");
+                            var service = collections.Where(c => c.ImplementationType != null).FirstOrDefault(c => c.ImplementationType?.Name == nameof(UserService));
+                            var met = service?.ImplementationType?.GetMethod("GetByToken");
+
+                            
                             var result = (Task)met.Invoke(context.RequestServices.GetService(service.ServiceType), new List<object> { token }.ToArray());
                             await result.WaitAsync(TimeSpan.FromMinutes(2));
-
+                            
                             var data = result.GetType().GetProperty("Result");
                             if (data != null)
                                 currentUser.User = (UserModel)data.GetValue(result);
                         }
 
-                        using (WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync())
+                        using (System.Net.WebSockets.WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync())
                         {
                             currentUser.Socket = webSocket;
                             currentUser.Sockets = CurrentConnections;
@@ -127,7 +139,7 @@ namespace PharmacySystem.Server
         /// <param name="services"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        private async Task Echo(HttpContext context, WebSocket webSocket, IServiceProvider services, CodeEngine.WebSocket.Models.Schema.RequestModel request)
+        private async Task Echo(HttpContext context, System.Net.WebSockets.WebSocket webSocket, IServiceProvider services, CodeEngine.WebSocket.Models.Schema.RequestModel request)
         {
             WebSocketCloseStatus? closed;
             do
@@ -138,7 +150,7 @@ namespace PharmacySystem.Server
                 if (closed.HasValue)
                     break;
                 string str = Encoding.Default.GetString(new ArraySegment<byte>(buffer, 0, result.Count).Array);
-                var currentObject = await JsonConvert.DeserializeObjectAsync<RequestModel>(str);
+                var currentObject = JsonConvert.DeserializeObject<WsRequest>(str);
 
                 try
                 {
@@ -162,13 +174,13 @@ namespace PharmacySystem.Server
 
 
                     var ddd = response.GetType().GetProperty("Result");
-                    var socketResponse = await JsonConvert.SerializeObjectAsync(new ResponseModel { controller = currentObject.controller, method = currentObject.method, value = ddd.GetValue(response), IsSuccess = true });
+                    var socketResponse = JsonConvert.SerializeObject(new ResponseModel { controller = currentObject.controller, method = currentObject.method, value = ddd.GetValue(response), IsSuccess = true });
                     var responseByte = System.Text.Encoding.Default.GetBytes(socketResponse);
                     await webSocket.SendAsync(new ArraySegment<byte>(responseByte, 0, responseByte.Count()), result.MessageType, true, CancellationToken.None);
                 }
                 catch (Exception ex)
                 {
-                    var model = await JsonConvert.SerializeObjectAsync(new ResponseModel { controller = currentObject.controller, method = currentObject.method, ErrorCode = ex.HResult, ErrorMessage = ex.Message, IsSuccess = false });
+                    var model = JsonConvert.SerializeObject(new ResponseModel { controller = currentObject.controller, method = currentObject.method, ErrorCode = ex.HResult, ErrorMessage = ex.Message, IsSuccess = false });
                     var responseByte = System.Text.Encoding.Default.GetBytes(model);
                     await webSocket.SendAsync(new ArraySegment<byte>(System.Text.Encoding.Default.GetBytes(model), 0, responseByte.Count()), result.MessageType, true, CancellationToken.None);
                 }

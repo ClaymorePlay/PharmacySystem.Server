@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace GaneshaProgramming.Plugins.User.IServices.Models.Response
 {
-    public class GetCurrentUserResponse
+    public class GetUserResponse
     {
         public string Email { get; set; }
 
         public long UserId { get; set; }
 
-        public string UserName {get; set;}
+        public string UserName { get; set; }
 
         public RoleEnum Role { get; set; }
     }

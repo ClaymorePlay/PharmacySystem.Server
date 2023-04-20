@@ -4,16 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Plugins.User.IServices.Models.Request
+namespace GaneshaProgramming.Plugins.User.IServices.Models.Request
 {
     public class RegisterRequest
     {
-        public string Name { get; set; }
-
+        /// <summary>
+        /// Почта
+        /// </summary>
         public string Email { get; set; }
-        
-        public string Password { get; set; } 
 
+        /// <summary>
+        /// Пароль
+        /// </summary>
+        public string Password { get; set; }
+
+        /// <summary>
+        /// Подтверждение пароля
+        /// </summary>
         public string ConfirmPassword { get; set; }
+
+        /// <summary>
+        /// Имяч пользовтаеля
+        /// </summary>
+        public string UserName { get; set; }
     }
 }

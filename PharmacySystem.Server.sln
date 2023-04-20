@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugins.User.Services", "Pl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugins.User.Data", "Plugins.User.Data\Plugins.User.Data.csproj", "{AEC3E4F2-E5FF-499B-871C-AD0EE2DFCC0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins.User.IServices", "Plugins.User.IServices\Plugins.User.IServices.csproj", "{4170AE53-F952-4EDF-B9A1-4DC35625DAAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugins.User.IServices", "Plugins.User.IServices\Plugins.User.IServices.csproj", "{4170AE53-F952-4EDF-B9A1-4DC35625DAAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PharmacySystem.IdentityService", "PharmacySystem.IdentityService\PharmacySystem.IdentityService.csproj", "{274A5161-AA00-4736-8797-A45C62763CC9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{4170AE53-F952-4EDF-B9A1-4DC35625DAAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4170AE53-F952-4EDF-B9A1-4DC35625DAAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4170AE53-F952-4EDF-B9A1-4DC35625DAAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{274A5161-AA00-4736-8797-A45C62763CC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{274A5161-AA00-4736-8797-A45C62763CC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{274A5161-AA00-4736-8797-A45C62763CC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{274A5161-AA00-4736-8797-A45C62763CC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

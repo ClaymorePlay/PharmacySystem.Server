@@ -1,5 +1,4 @@
-﻿using CodeEngine.WebSocket.Models.Schema;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,16 +6,11 @@ using System.Threading.Tasks;
 
 namespace GaneshaProgramming.Plugins.User.IServices.Models.Request
 {
-    public class LoginRequest
+    public class GetCurrentUserRequest
     {
         /// <summary>
-        /// Почта
+        /// Почта пользователя
         /// </summary>
         public string Email { get; set; }
-
-        /// <summary>
-        /// Пароль
-        /// </summary>
-        public string Password { get; set; }
     }
 }
