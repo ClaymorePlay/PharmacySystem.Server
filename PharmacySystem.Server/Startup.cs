@@ -170,19 +170,19 @@ namespace PharmacySystem.Server
                     else
                         response = (Task)method.Invoke(services2, new List<object> { model, request }.ToArray());
 
-                    await response.WaitAsync(TimeSpan.FromMinutes(2));
+                    await response.WaitAsync(TimeSpan.FromSeconds(20));
 
 
                     var ddd = response.GetType().GetProperty("Result");
                     var socketResponse = JsonConvert.SerializeObject(new ResponseModel { controller = currentObject.controller, method = currentObject.method, value = ddd.GetValue(response), IsSuccess = true });
                     var responseByte = System.Text.Encoding.Default.GetBytes(socketResponse);
-                    await webSocket.SendAsync(new ArraySegment<byte>(responseByte, 0, responseByte.Count()), result.MessageType, true, CancellationToken.None);
+                    await webSocket.SendAsync(new ArraySegment<byte>(responseByte), result.MessageType, true, CancellationToken.None);
                 }
                 catch (Exception ex)
                 {
                     var model = JsonConvert.SerializeObject(new ResponseModel { controller = currentObject.controller, method = currentObject.method, ErrorCode = ex.HResult, ErrorMessage = ex.Message, IsSuccess = false });
                     var responseByte = System.Text.Encoding.Default.GetBytes(model);
-                    await webSocket.SendAsync(new ArraySegment<byte>(System.Text.Encoding.Default.GetBytes(model), 0, responseByte.Count()), result.MessageType, true, CancellationToken.None);
+                    await webSocket.SendAsync(new ArraySegment<byte>(System.Text.Encoding.Default.GetBytes(model)), result.MessageType, true, CancellationToken.None);
                 }
             }
             while (true);

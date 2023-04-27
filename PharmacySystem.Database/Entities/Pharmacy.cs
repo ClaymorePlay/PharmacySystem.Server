@@ -22,6 +22,5 @@ namespace PharmacySystem.Database.Entities
 
         public List<Product> Products { get; set; }
 
-        public List<Order> Orders { get; set; }
     }
 }

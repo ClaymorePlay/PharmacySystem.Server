@@ -12,11 +12,7 @@ namespace PharmacySystem.Database.Entities
 
         public long ProductId { get; set; }
 
-        public int PharmacyId { get; set; }
-
         public DateTime DateOrder { get; set; }
-
-        public Pharmacy Pharmacy { get; set; }
 
         public Product Product { get; set;  }
     }

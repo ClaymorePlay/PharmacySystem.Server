@@ -39,9 +39,15 @@ namespace PharmacySystem.Database
         {
             builder.Entity<Pharmacy>().HasKey(c => c.Id);
             builder.Entity<Pharmacy>().HasMany(c => c.Products).WithOne(c => c.Pharmacy).HasForeignKey(c => c.PharmacyId);
-            builder.Entity<Pharmacy>().HasMany(c => c.Orders).WithOne(c => c.Pharmacy).HasForeignKey(c => c.PharmacyId);
             builder.Entity<Pharmacy>().HasMany(c => c.Employees).WithOne(c => c.Pharmacy).HasForeignKey(c => c.PharmacyId);
-        
+            builder.Entity<Product>().HasMany(c => c.Orders).WithOne(c => c.Product).HasForeignKey(c => c.ProductId);
+
+            builder.Entity<Order>().HasKey(c => c.Id);
+            builder.Entity<Employee>().HasKey(c => c.Id);
+            builder.Entity<Producer>().HasKey(c => c.Id);
+            builder.Entity<Product>().HasKey(c => c.Id);
+
+            builder.Entity<Producer>().HasMany(c => c.Products).WithOne(c => c.Producer).HasForeignKey(c => c.ProducerId);
         }
     }
 }
