@@ -18,6 +18,8 @@
     <ProjectReference Include="..\PharmacySystem.Database\PharmacySystem.Database.csproj" />
     <ProjectReference Include="..\PharmacySystem.IdentityService\PharmacySystem.IdentityService.csproj" />
     <ProjectReference Include="..\PharmacySystem.WebSocket\PharmacySystem.WebSocket.csproj" />
+    <ProjectReference Include="..\Plugins.Pharmacy.IServices\Plugins.Pharmacy.IServices.csproj" />
+    <ProjectReference Include="..\Plugins.Pharmacy.Services\Plugins.Pharmacy.Services.csproj" />
     <ProjectReference Include="..\Plugins.User.Data\Plugins.User.Data.csproj" />
     <ProjectReference Include="..\Plugins.User.IServices\Plugins.User.IServices.csproj" />
     <ProjectReference Include="..\Plugins.User.Services\Plugins.User.Services.csproj" />

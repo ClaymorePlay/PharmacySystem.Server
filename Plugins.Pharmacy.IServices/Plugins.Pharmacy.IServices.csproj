@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PharmacySystem.Server.Models\PharmacySystem.Server.Models.csproj" />
+    <ProjectReference Include="..\PharmacySystem.WebSocket\PharmacySystem.WebSocket.csproj" />
+  </ItemGroup>
+
 </Project>

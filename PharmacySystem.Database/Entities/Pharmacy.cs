@@ -18,6 +18,10 @@ namespace PharmacySystem.Database.Entities
         /// </summary>
         public string Adress { get; set; }
 
+        public string Name { get; set; }
+
+        public string Contacts { get; set; }
+
         public List<Employee> Employees { get; set; }
 
         public List<Product> Products { get; set; }

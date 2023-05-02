@@ -147,11 +147,18 @@ namespace GaneshaProgramming.Plugins.User.Services
         /// <returns></returns>
         public async Task<UserModel> GetByToken(Guid token)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(c => c.AutToken == token);
-            if (user == null)
-                return new UserModel();
+            try
+            {
+                var user = await _db.Users.FirstOrDefaultAsync(c => c.AutToken == token);
+                if (user == null)
+                    return new UserModel();
 
-            return new UserModel { FullName = user.UserName, Role = user.Role, Status = CodeEngine.WebSocket.Models.User.Enum.UserStatus.Authorized, UserId = user.Id };
+                return new UserModel { FullName = user.UserName, Role = user.Role, Status = CodeEngine.WebSocket.Models.User.Enum.UserStatus.Authorized, UserId = user.Id };
+            }
+            catch (Exception ex) 
+            {
+                throw ex;
+            }
         }
 
 

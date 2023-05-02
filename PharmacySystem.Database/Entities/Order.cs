@@ -14,6 +14,10 @@ namespace PharmacySystem.Database.Entities
 
         public DateTime DateOrder { get; set; }
 
+        public long UserId { get; set; }
+
+        public int Count { get; set; }
+
         public Product Product { get; set;  }
     }
 }

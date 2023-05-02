@@ -1,5 +1,6 @@
-﻿using Plugins.Pharmacy.IServices.Models.Request;
-using Plugins.Pharmacy.IServices.Models.Response;
+﻿using PharmacySystem.Server.Models.Product;
+using PharmacySystem.Server.Models.ProductModels.Request;
+using PharmacySystem.Server.Models.ProductModels.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace Plugins.Pharmacy.IServices.Interfaces
 
         Task<AddNewProductsResponse> CreateProduct(CreateProductRequest request);
     
-        Task<>
+        Task<GetProductsListResponse> GetProducts(GetProductsListRequest request);
+
+        Task<RemoveProductResponse> RemoveProduct(RemoveProductRequest request);
     }
 }

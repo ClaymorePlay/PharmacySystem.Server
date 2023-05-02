@@ -25,9 +25,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PharmacySystem.IdentityServ
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pharmacy", "Pharmacy", "{19E08602-3F05-415B-B0B5-48FA5FE9026A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins.Pharmacy.IServices", "Plugins.Pharmacy.IServices\Plugins.Pharmacy.IServices.csproj", "{62178BD3-E7EB-4A7A-BEE4-FC7340C1178A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugins.Pharmacy.IServices", "Plugins.Pharmacy.IServices\Plugins.Pharmacy.IServices.csproj", "{62178BD3-E7EB-4A7A-BEE4-FC7340C1178A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins.Pharmacy.Services", "Plugins.Pharmacy.Services\Plugins.Pharmacy.Services.csproj", "{7901DD5E-FC24-4760-A528-C976B4C13566}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugins.Pharmacy.Services", "Plugins.Pharmacy.Services\Plugins.Pharmacy.Services.csproj", "{7901DD5E-FC24-4760-A528-C976B4C13566}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PharmacySystem.Server.Models", "PharmacySystem.Server.Models\PharmacySystem.Server.Models.csproj", "{C2817E3E-5FA5-4B82-B0D5-6D1303726B02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,10 @@ Global
 		{7901DD5E-FC24-4760-A528-C976B4C13566}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7901DD5E-FC24-4760-A528-C976B4C13566}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7901DD5E-FC24-4760-A528-C976B4C13566}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2817E3E-5FA5-4B82-B0D5-6D1303726B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2817E3E-5FA5-4B82-B0D5-6D1303726B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2817E3E-5FA5-4B82-B0D5-6D1303726B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2817E3E-5FA5-4B82-B0D5-6D1303726B02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{19E08602-3F05-415B-B0B5-48FA5FE9026A} = {47D6D90C-8F86-4A87-8852-18C802BBAC4E}
 		{62178BD3-E7EB-4A7A-BEE4-FC7340C1178A} = {19E08602-3F05-415B-B0B5-48FA5FE9026A}
 		{7901DD5E-FC24-4760-A528-C976B4C13566} = {19E08602-3F05-415B-B0B5-48FA5FE9026A}
+		{C2817E3E-5FA5-4B82-B0D5-6D1303726B02} = {B0F62E65-35AF-4853-8408-FEF550F845EC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {784EBB8A-27D5-4CB6-953D-96C6A0A994A2}

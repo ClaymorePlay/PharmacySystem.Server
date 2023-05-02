@@ -11,4 +11,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PharmacySystem.Server.Models\PharmacySystem.Server.Models.csproj" />
+  </ItemGroup>
+
 </Project>

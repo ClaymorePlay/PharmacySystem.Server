@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using PharmacySystem.Database;
 using PharmacySystem.WebSocket.Models.Schema;
+using Plugins.Pharmacy.IServices.Interfaces;
+using Plugins.Pharmacy.Services;
 using System.Net;
 using System.Net.WebSockets;
 using System.Text;
@@ -47,6 +49,12 @@ namespace PharmacySystem.Server
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IEmployeeService, EmployeeService>();
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IProducerService, ProducerService>();
+            services.AddTransient<IPharmacyService, PharmacyService>();
+            services.AddTransient<IOrderService, OrderService>();
+
             //services.AddSingleton<CodeEngine.WebSocket.Models.User.UserModel>();
 
             collections = services;
@@ -93,7 +101,6 @@ namespace PharmacySystem.Server
                         {
                             var service = collections.Where(c => c.ImplementationType != null).FirstOrDefault(c => c.ImplementationType?.Name == nameof(UserService));
                             var met = service?.ImplementationType?.GetMethod("GetByToken");
-
                             
                             var result = (Task)met.Invoke(context.RequestServices.GetService(service.ServiceType), new List<object> { token }.ToArray());
                             await result.WaitAsync(TimeSpan.FromMinutes(2));
