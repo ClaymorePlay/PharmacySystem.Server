@@ -43,7 +43,7 @@ namespace GaneshaProgramming.Plugins.User.Services
                 throw new Exception("Почта уже зарегистрирована");
 
             var password = ComputeSha256Hash(model.Password);
-            var addUser = new Data.Models.User { Email = model.Email, Password = password, Role = IServices.Models.Enum.RoleEnum.Admin, UserName = model.UserName, AutToken = Guid.NewGuid() };
+            var addUser = new Data.Models.User { Email = model.Email, Password = password, Role = IServices.Models.Enum.RoleEnum.User, UserName = model.UserName, AutToken = Guid.NewGuid() };
             await _db.Users.AddAsync(addUser);
             await _db.SaveChangesAsync();
 

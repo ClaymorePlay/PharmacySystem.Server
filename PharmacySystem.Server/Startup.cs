@@ -63,6 +63,7 @@ namespace PharmacySystem.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider provider)
         {
+            var userService = provider.GetRequiredService<DataContext>();
 
             if (env.IsDevelopment())
             {
@@ -85,50 +86,57 @@ namespace PharmacySystem.Server
             // <snippet_AcceptWebSocket>
             app.Use(async (context, next) =>
             {
-                if (context.Request.Path == "/ws")
+                try
                 {
-                    var value = context.Request.QueryString.ToString();
-                    Guid token = Guid.Empty;
-                    if (!String.IsNullOrWhiteSpace(value))
+                    if (context.Request.Path == "/ws")
                     {
-                        token = Guid.Parse(value.Replace("?token=", ""));
-                    }
-                    if (context.WebSockets.IsWebSocketRequest)
-                    {
-                        var currentUser = new CodeEngine.WebSocket.Models.Schema.RequestModel { User = new CodeEngine.WebSocket.Models.User.UserModel() };
-
-                        if (token != Guid.Empty)
+                        var value = context.Request.QueryString.ToString();
+                        Guid token = Guid.Empty;
+                        if (!String.IsNullOrWhiteSpace(value))
                         {
-                            var service = collections.Where(c => c.ImplementationType != null).FirstOrDefault(c => c.ImplementationType?.Name == nameof(UserService));
-                            var met = service?.ImplementationType?.GetMethod("GetByToken");
-                            
-                            var result = (Task)met.Invoke(context.RequestServices.GetService(service.ServiceType), new List<object> { token }.ToArray());
-                            await result.WaitAsync(TimeSpan.FromMinutes(2));
-                            
-                            var data = result.GetType().GetProperty("Result");
-                            if (data != null)
-                                currentUser.User = (UserModel)data.GetValue(result);
+                            token = Guid.Parse(value.Replace("?token=", ""));
                         }
-
-                        using (System.Net.WebSockets.WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync())
+                        if (context.WebSockets.IsWebSocketRequest)
                         {
-                            currentUser.Socket = webSocket;
-                            currentUser.Sockets = CurrentConnections;
+                            var currentUser = new CodeEngine.WebSocket.Models.Schema.RequestModel { User = new CodeEngine.WebSocket.Models.User.UserModel() };
 
-                            CurrentConnections.Add(webSocket);
+                            if (token != Guid.Empty)
+                            {
+                                var service = collections.Where(c => c.ImplementationType != null).FirstOrDefault(c => c.ImplementationType?.Name == nameof(UserService));
+                                var met = service?.ImplementationType?.GetMethod("GetByToken");
 
-                            await Echo(context, webSocket, provider, currentUser);
+                                var result = (Task)met.Invoke(context.RequestServices.GetService(service.ServiceType), new List<object> { token }.ToArray());
+                                await result.WaitAsync(TimeSpan.FromMinutes(2));
+
+                                var data = result.GetType().GetProperty("Result");
+                                if (data != null)
+                                    currentUser.User = (UserModel)data.GetValue(result);
+                            }
+
+                            using (System.Net.WebSockets.WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync())
+                            {
+                                currentUser.Socket = webSocket;
+                                currentUser.Sockets = CurrentConnections;
+
+                                CurrentConnections.Add(webSocket);
+
+                                await Echo(context, webSocket, provider, currentUser);
+                            }
+
                         }
-
+                        else
+                        {
+                            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        }
                     }
                     else
                     {
-                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        await next();
                     }
                 }
-                else
+                catch(Exception ex)
                 {
-                    await next();
+
                 }
 
             });
