@@ -13,6 +13,7 @@ using Plugins.Pharmacy.IServices.Interfaces;
 using Plugins.Pharmacy.Services;
 using System.Net;
 using System.Net.WebSockets;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace PharmacySystem.Server
@@ -175,15 +176,20 @@ namespace PharmacySystem.Server
                     var type = service.ServiceType;
 
                     var services2 = context.RequestServices.GetService(type);
-                    var parametr = method.GetParameters().FirstOrDefault();
+                    var @params = method?.GetParameters().ToList();
+                    var parametr = @params?.FirstOrDefault();
 
-                    var model = parametr == null || currentObject.value == null ? null : JsonConvert.DeserializeObject(currentObject.value, parametr == null ? null : parametr.ParameterType);
+                    var model = parametr == null || currentObject?.value == null ? null : JsonConvert.DeserializeObject(currentObject.value, parametr.ParameterType);
                     Task response;
-                    if (model == typeof(CodeEngine.WebSocket.Models.Schema.RequestModel) || model == null)
+                    Type echotype = request.GetType();
+                    if (Type.Equals(echotype, parametr?.ParameterType))
                         response = (Task)method.Invoke(services2, new List<object> { request }.ToArray());
-
-                    else
+                    else if (@params != null && @params.Count == 1)
+                        response = (Task)method.Invoke(services2, new List<object> { model }.ToArray());
+                    else if (@params.Count == 2)
                         response = (Task)method.Invoke(services2, new List<object> { model, request }.ToArray());
+                    else
+                        response = (Task)method.Invoke(services2, new List<object> {  }.ToArray());
 
                     await response.WaitAsync(TimeSpan.FromSeconds(20));
 

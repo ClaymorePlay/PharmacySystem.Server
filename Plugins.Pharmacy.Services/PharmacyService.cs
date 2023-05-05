@@ -67,7 +67,7 @@ namespace Plugins.Pharmacy.Services
                 var pharmacies = db.Pharmacies.AsQueryable();
 
                 if (!String.IsNullOrWhiteSpace(request.Name))
-                    pharmacies = pharmacies.Where(c => c.Name.Contains(request.Name, StringComparison.OrdinalIgnoreCase));
+                    pharmacies = pharmacies.Where(c => c.Name.Contains(request.Name));
 
                 var count = await pharmacies.CountAsync();
                 var response = await pharmacies.Skip(request.Page.Skip).Take(request.Page.Take).Select(c => new PharmacyItem

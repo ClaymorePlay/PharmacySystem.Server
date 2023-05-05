@@ -100,6 +100,7 @@ namespace Plugins.Pharmacy.Services
                 if (request.PharmacyId.HasValue)
                     products = products.Where(c => c.PharmacyId == request.PharmacyId.Value);
 
+                var count = await products.CountAsync();
                 var response = await products
                     .Skip(request.Page.Skip).Take(request.Page.Take)
                     .Select(c => new ProductListItem
@@ -110,11 +111,21 @@ namespace Plugins.Pharmacy.Services
                         Price = c.Price,
                         ProducerName = c.Producer.Name,
                         ProductId = c.Id,
-                        ProductName = c.Name
+                        ProductName = c.Name,
+                        Description = c.Description
                     })
                     .ToListAsync();
 
-                return new GetProductsListResponse { Items = response };
+                return new GetProductsListResponse 
+                { 
+                    Items = response,
+                    Page = new PharmacySystem.Server.Models.Common.PageResponse
+                    {
+                        Count = count,
+                        Size = response.Count,
+                        Current = (request.Page.Skip + request.Page.Take) / request.Page.Take
+                    }
+                };
             }
         }
 
@@ -135,6 +146,52 @@ namespace Plugins.Pharmacy.Services
                 await db.SaveChangesAsync();
 
                 return new RemoveProductResponse { Removed = true };
+            }
+        }
+
+        /// <summary>
+        /// Обновление товара
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<UpdateProductResponse> UpdateProduct(UpdateProductRequest request)
+        {
+            using (var db = new DataContext(_dbOptions))
+            {
+                var product = await db.Products.FirstOrDefaultAsync(c => c.Id == request.ProductId);
+
+                if (product == null)
+                    return new UpdateProductResponse { Updated = false };
+
+                product.Name = request.Name ?? product.Name;
+                product.Price = request.Price ?? product.Price;
+                product.Count = request.Count ?? product.Count;
+                product.Description = request.Description ?? product.Description;
+
+                await db.SaveChangesAsync();
+
+                return new UpdateProductResponse { Updated = true };
+            }
+        }
+
+        public async Task<ProductListItem> GetById(GetProductByIdRequest request)
+        {
+            using (var db = new DataContext(_dbOptions))
+            {
+                var product = await db.Products.FirstOrDefaultAsync(c => c.Id == request.PrioductId);
+
+                if (product == null)
+                    return new ProductListItem();
+
+                return new ProductListItem
+                {
+                    PharmacyId = product.PharmacyId,
+                    Count = product.Count,
+                    Description = product.Description,
+                    Price = product.Price,
+                    ProductId = product.Id,
+                    ProductName = product.Name,
+                };
             }
         }
     }

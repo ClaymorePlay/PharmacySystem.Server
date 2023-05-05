@@ -18,5 +18,9 @@ namespace Plugins.Pharmacy.IServices.Interfaces
         Task<GetProductsListResponse> GetProducts(GetProductsListRequest request);
 
         Task<RemoveProductResponse> RemoveProduct(RemoveProductRequest request);
+
+        Task<UpdateProductResponse> UpdateProduct(UpdateProductRequest request);
+
+        Task<ProductListItem> GetById(GetProductByIdRequest request);
     }
 }

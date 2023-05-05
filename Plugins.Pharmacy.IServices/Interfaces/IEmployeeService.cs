@@ -15,5 +15,7 @@ namespace Plugins.Pharmacy.IServices.Interfaces
         Task<RemoveEmployeeResponse> RemoveEmployee(RemoveEmployeeRequest request);
 
         Task<UpdateEmployeeResponse> UpdateEmployee(UpdateEmployeeRequest request);
+
+        Task<GetEmployeeListResponse> GetEmployeesList(GetEmployeeListRequest request);
     }
 }

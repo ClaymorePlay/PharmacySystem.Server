@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PharmacySystem.Server.Models.Product
+namespace PharmacySystem.Server.Models.EmployeeModels.Response
 {
-    public class GetProductsListResponse
+    public class GetEmployeeListResponse
     {
-        public List<ProductListItem> Items { get; set; }
-
         public PageResponse Page { get; set; }
+
+        public List<EmployeeItem> Items { get; set; }
     }
 }

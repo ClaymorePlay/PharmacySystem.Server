@@ -82,5 +82,36 @@ namespace Plugins.Pharmacy.Services
                 return new UpdateProducerResponse { Updated = true };
             }
         }
+
+        /// <summary>
+        /// Получение производителей
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<GetProducerListResponse> GetProducerList(GetProducerListRequest request)
+        {
+            using (var db = new DataContext(_dbOptions))
+            {
+                var producers = db.Producers.AsQueryable();
+
+                if (!String.IsNullOrWhiteSpace(request.Name))
+                    producers = producers.Where(c => c.Name.ToLower().Contains(request.Name.ToLower()));
+
+                var count = await producers.CountAsync();
+                var result = await producers.Skip(request.Page.Skip).Take(request.Page.Take).ToListAsync();
+
+                return new GetProducerListResponse
+                {
+                    Items = result.Select(c => new ProducerItem { Id = c.Id, Name = c.Name }).ToList(),
+                    Page = new PharmacySystem.Server.Models.Common.PageResponse
+                    {
+                        Count = count,
+                        Size = result.Count,
+                        Current = (request.Page.Skip + request.Page.Take) / request.Page.Take
+                    }
+                };
+            }
+        }
     }
 }

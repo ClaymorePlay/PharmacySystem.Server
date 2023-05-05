@@ -3,6 +3,7 @@ using PharmacySystem.Database;
 using PharmacySystem.Database.Entities;
 using PharmacySystem.Server.Models.EmployeeModels.Request;
 using PharmacySystem.Server.Models.EmployeeModels.Response;
+using PharmacySystem.Server.Models.PharmacyModels.Response;
 using Plugins.Pharmacy.IServices.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -89,6 +90,46 @@ namespace Plugins.Pharmacy.Services
 
                 await db.SaveChangesAsync();
                 return new UpdateEmployeeResponse { Updated = true };
+            }
+        }
+
+        /// <summary>
+        /// Получение сотрудников
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<GetEmployeeListResponse> GetEmployeesList(GetEmployeeListRequest request)
+        {
+            using (var db = new DataContext(_dbOptions))
+            {
+                var employees = db.Employees.AsQueryable();
+
+                if (!String.IsNullOrWhiteSpace(request.Name))
+                    employees = employees.Where(c => c.FullName.Contains(request.Name));
+                if (request.PharmacyId.HasValue)
+                    employees = employees.Where(c => c.PharmacyId == request.PharmacyId);
+
+                var count = await employees.CountAsync();
+                var response = await employees.Skip(request.Page.Skip).Take(request.Page.Take).Select(c => new EmployeeItem
+                {
+                    Id = c.Id,
+                    Name = c.FullName,
+                    Salary = c.Salary,
+                    Gender = c.Gender,
+                    PharmacyId = c.PharmacyId
+                }).ToListAsync();
+
+                return new GetEmployeeListResponse
+                {
+                    Items = response,
+                    Page = new PharmacySystem.Server.Models.Common.PageResponse
+                    {
+                        Count = count,
+                        Size = response.Count,
+                        Current = (request.Page.Skip + request.Page.Take) / request.Page.Take
+                    }
+                };
             }
         }
     }
