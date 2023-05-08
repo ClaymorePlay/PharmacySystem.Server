@@ -35,15 +35,8 @@ namespace PharmacySystem.Server
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddIdentity<UserModel, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>();
-
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
-            services.AddAuthorization();
 
             services.AddDbContext<DataContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<GaneshaProgramming.Plugins.User.Data.DataContext>(options =>
@@ -55,8 +48,6 @@ namespace PharmacySystem.Server
             services.AddTransient<IProducerService, ProducerService>();
             services.AddTransient<IPharmacyService, PharmacyService>();
             services.AddTransient<IOrderService, OrderService>();
-
-            //services.AddSingleton<CodeEngine.WebSocket.Models.User.UserModel>();
 
             collections = services;
         }
@@ -81,8 +72,7 @@ namespace PharmacySystem.Server
             app.UseWebSockets(webSocketOptions);
 
             // </snippet_UseWebSocketsOptions>
-            app.UseAuthentication();
-            app.UseAuthorization();
+
 
             // <snippet_AcceptWebSocket>
             app.Use(async (context, next) =>
@@ -99,19 +89,23 @@ namespace PharmacySystem.Server
                         }
                         if (context.WebSockets.IsWebSocketRequest)
                         {
-                            var currentUser = new CodeEngine.WebSocket.Models.Schema.RequestModel { User = new CodeEngine.WebSocket.Models.User.UserModel() };
+                            var currentUser = new RequestModel { User = new UserModel() };
 
                             if (token != Guid.Empty)
                             {
                                 var service = collections.Where(c => c.ImplementationType != null).FirstOrDefault(c => c.ImplementationType?.Name == nameof(UserService));
                                 var met = service?.ImplementationType?.GetMethod("GetByToken");
 
-                                var result = (Task)met.Invoke(context.RequestServices.GetService(service.ServiceType), new List<object> { token }.ToArray());
+                                var result = (Task?)met?.Invoke(context.RequestServices.GetService(service?.ServiceType), new List<object> { token }.ToArray());
+
+                                if (result == null)
+                                    throw new Exception("Method Not Found");
+
                                 await result.WaitAsync(TimeSpan.FromMinutes(2));
 
                                 var data = result.GetType().GetProperty("Result");
                                 if (data != null)
-                                    currentUser.User = (UserModel)data.GetValue(result);
+                                    currentUser.User = ((UserModel?)data.GetValue(result) ?? currentUser.User);
                             }
 
                             using (System.Net.WebSockets.WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync())
@@ -121,7 +115,7 @@ namespace PharmacySystem.Server
 
                                 CurrentConnections.Add(webSocket);
 
-                                await Echo(context, webSocket, provider, currentUser);
+                                await ListenClients(context, webSocket, provider, currentUser);
                             }
 
                         }
@@ -155,7 +149,7 @@ namespace PharmacySystem.Server
         /// <param name="services"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        private async Task Echo(HttpContext context, System.Net.WebSockets.WebSocket webSocket, IServiceProvider services, CodeEngine.WebSocket.Models.Schema.RequestModel request)
+        private async Task ListenClients(HttpContext context, System.Net.WebSockets.WebSocket webSocket, IServiceProvider services, CodeEngine.WebSocket.Models.Schema.RequestModel request)
         {
             WebSocketCloseStatus? closed;
             do
@@ -170,7 +164,10 @@ namespace PharmacySystem.Server
 
                 try
                 {
-                    var service = collections.Where(c => c.ImplementationType != null).First(c => c.ImplementationType.Name == currentObject.controller);
+                    if (currentObject == null)
+                        throw new Exception("Необходимо указать правильную модель запроса!");
+
+                    var service = collections.Where(c => c.ImplementationType != null).First(c => c.ImplementationType?.Name == currentObject.controller);
 
                     var method = service.ImplementationType?.GetMethod(currentObject.method);
                     var type = service.ServiceType;
@@ -201,7 +198,7 @@ namespace PharmacySystem.Server
                 }
                 catch (Exception ex)
                 {
-                    var model = JsonConvert.SerializeObject(new ResponseModel { controller = currentObject.controller, method = currentObject.method, ErrorCode = ex.HResult, ErrorMessage = ex.Message, IsSuccess = false });
+                    var model = JsonConvert.SerializeObject(new ResponseModel { controller = currentObject?.controller, method = currentObject?.method, ErrorCode = ex.HResult, ErrorMessage = ex.Message, IsSuccess = false });
                     var responseByte = System.Text.Encoding.Default.GetBytes(model);
                     await webSocket.SendAsync(new ArraySegment<byte>(System.Text.Encoding.Default.GetBytes(model)), result.MessageType, true, CancellationToken.None);
                 }

@@ -161,24 +161,5 @@ namespace GaneshaProgramming.Plugins.User.Services
             }
         }
 
-
-        /// <summary>
-        /// Получить количество зарегистрированных пользователей
-        /// </summary>
-        /// <returns></returns>
-        public async Task<GetRegisteredCountResponse> GetRegisteredCount()
-        {
-            var count = await _db.Users.LongCountAsync();
-            return new GetRegisteredCountResponse { UsersCount = count };
-        }
-
-        /// <summary>
-        /// Получение всех пользователей что находятся на сайте в текущий момент
-        /// </summary>
-        /// <returns></returns>
-        public async Task<GetOnlineUsersResponse> GetOnlineUsers(RequestModel user)
-        {
-            return new GetOnlineUsersResponse { UsersCount = user.Sockets.Count() };
-        }
     }
 }

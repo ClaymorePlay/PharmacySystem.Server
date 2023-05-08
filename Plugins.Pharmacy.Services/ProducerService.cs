@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CodeEngine.WebSocket.Models.Schema;
+using Microsoft.EntityFrameworkCore;
 using PharmacySystem.Database;
 using PharmacySystem.Database.Entities;
 using PharmacySystem.Server.Models.ProducerModels.Request;
@@ -26,8 +27,12 @@ namespace Plugins.Pharmacy.Services
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<CreateProducerResponse> CreateProducer(CreateProducerRequest request)
+        public async Task<CreateProducerResponse> CreateProducer(CreateProducerRequest request, RequestModel user)
         {
+            if (user.User.Role != GaneshaProgramming.Plugins.User.IServices.Models.Enum.RoleEnum.Admin)
+                throw new Exception("У вас не достаточно прав на внесение изменений");
+
+
             using (var db = new DataContext(_dbOptions))
             {
                 if (await db.Producers.AnyAsync(c => c.Name.ToLower().Trim() == request.Name.ToLower().Trim()))
@@ -46,8 +51,12 @@ namespace Plugins.Pharmacy.Services
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<RemoveProducerResponse> RemoveProducer(RemoveProducerRequest request)
+        public async Task<RemoveProducerResponse> RemoveProducer(RemoveProducerRequest request, RequestModel user)
         {
+            if (user.User.Role != GaneshaProgramming.Plugins.User.IServices.Models.Enum.RoleEnum.Admin)
+                throw new Exception("У вас не достаточно прав на внесение изменений");
+
+
             using (var db = new DataContext(_dbOptions))
             {
                 var producer = await db.Producers.FirstOrDefaultAsync(c => c.Id == request.Id);
@@ -67,8 +76,12 @@ namespace Plugins.Pharmacy.Services
         /// <param name="request"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<UpdateProducerResponse> UpdateProducer(UpdateProducerRequest request)
+        public async Task<UpdateProducerResponse> UpdateProducer(UpdateProducerRequest request, RequestModel user)
         {
+            if (user.User.Role != GaneshaProgramming.Plugins.User.IServices.Models.Enum.RoleEnum.Admin)
+                throw new Exception("У вас не достаточно прав на внесение изменений");
+
+
             using (var db = new DataContext(_dbOptions))
             {
                 var producer = await db.Producers.FirstOrDefaultAsync(c => c.Id == request.ProducerId);

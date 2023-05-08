@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CodeEngine.WebSocket.Models.Schema;
+using Microsoft.EntityFrameworkCore;
 using PharmacySystem.Database;
 using PharmacySystem.Database.Entities;
 using PharmacySystem.Server.Models.EmployeeModels.Request;
@@ -28,8 +29,11 @@ namespace Plugins.Pharmacy.Services
         /// <param name="request"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<CreateEmployeeResponse> CreateEmployee(CreateEmployeeRequest request)
+        public async Task<CreateEmployeeResponse> CreateEmployee(CreateEmployeeRequest request, RequestModel user)
         {
+            if (user.User.Role != GaneshaProgramming.Plugins.User.IServices.Models.Enum.RoleEnum.Admin)
+                throw new Exception("У вас не достаточно прав на внесение изменений");
+
             using (var db = new DataContext(_dbOptions))
             {
                 var employee = new Employee
@@ -54,8 +58,11 @@ namespace Plugins.Pharmacy.Services
         /// <param name="request"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<RemoveEmployeeResponse> RemoveEmployee(RemoveEmployeeRequest request)
+        public async Task<RemoveEmployeeResponse> RemoveEmployee(RemoveEmployeeRequest request, RequestModel user)
         {
+            if (user.User.Role != GaneshaProgramming.Plugins.User.IServices.Models.Enum.RoleEnum.Admin)
+                throw new Exception("У вас не достаточно прав на внесение изменений");
+
             using (var db = new DataContext(_dbOptions))
             {
                 if (await db.Employees.AnyAsync(c => c.Id == request.Id))
@@ -74,8 +81,11 @@ namespace Plugins.Pharmacy.Services
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<UpdateEmployeeResponse> UpdateEmployee(UpdateEmployeeRequest request)
+        public async Task<UpdateEmployeeResponse> UpdateEmployee(UpdateEmployeeRequest request, RequestModel user)
         {
+            if (user.User.Role != GaneshaProgramming.Plugins.User.IServices.Models.Enum.RoleEnum.Admin)
+                throw new Exception("У вас не достаточно прав на внесение изменений");
+
             using (var db = new DataContext(_dbOptions))
             {
                 var employee = await db.Employees.FirstOrDefaultAsync(c => c.Id == request.Id);
@@ -99,8 +109,11 @@ namespace Plugins.Pharmacy.Services
         /// <param name="request"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<GetEmployeeListResponse> GetEmployeesList(GetEmployeeListRequest request)
+        public async Task<GetEmployeeListResponse> GetEmployeesList(GetEmployeeListRequest request, RequestModel user)
         {
+            if (user.User.Role != GaneshaProgramming.Plugins.User.IServices.Models.Enum.RoleEnum.Admin)
+                throw new Exception("У вас не достаточно прав на получение этой информации");
+
             using (var db = new DataContext(_dbOptions))
             {
                 var employees = db.Employees.AsQueryable();

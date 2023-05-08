@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CodeEngine.WebSocket.Models.Schema;
+using Microsoft.EntityFrameworkCore;
 using PharmacySystem.Database;
 using PharmacySystem.Database.Entities;
 using PharmacySystem.Server.Models.Product;
@@ -28,8 +29,12 @@ namespace Plugins.Pharmacy.Services
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<AddNewProductsResponse> AddNewProducts(AddNewProductsRequest request)
+        public async Task<AddNewProductsResponse> AddNewProducts(AddNewProductsRequest request, RequestModel user)
         {
+            if (user.User.Role != GaneshaProgramming.Plugins.User.IServices.Models.Enum.RoleEnum.Admin)
+                throw new Exception("У вас не достаточно прав на внесение изменений");
+
+
             using (var db = new DataContext(_dbOptions))
             {
                 var proudcts = await db.Products.Where(c => request.Products.Select(h => h.ProductId).Contains(c.Id)).ToListAsync();
@@ -52,8 +57,12 @@ namespace Plugins.Pharmacy.Services
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<AddNewProductsResponse> CreateProduct(CreateProductRequest request)
+        public async Task<AddNewProductsResponse> CreateProduct(CreateProductRequest request, RequestModel user)
         {
+            if (user.User.Role != GaneshaProgramming.Plugins.User.IServices.Models.Enum.RoleEnum.Admin)
+                throw new Exception("У вас не достаточно прав на внесение изменений");
+
+
             using (var db = new DataContext(_dbOptions))
             {
                 if (db.Products.Any(c => c.Name.ToLower().Trim() == request.Name.ToLower().Trim()))
@@ -134,8 +143,12 @@ namespace Plugins.Pharmacy.Services
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<RemoveProductResponse> RemoveProduct(RemoveProductRequest request)
+        public async Task<RemoveProductResponse> RemoveProduct(RemoveProductRequest request, RequestModel user)
         {
+            if (user.User.Role != GaneshaProgramming.Plugins.User.IServices.Models.Enum.RoleEnum.Admin)
+                throw new Exception("У вас не достаточно прав на внесение изменений");
+
+
             using (var db = new DataContext(_dbOptions))
             {
                 var product = await db.Products.FirstOrDefaultAsync(c => c.Id == request.ProductId);
@@ -154,8 +167,12 @@ namespace Plugins.Pharmacy.Services
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<UpdateProductResponse> UpdateProduct(UpdateProductRequest request)
+        public async Task<UpdateProductResponse> UpdateProduct(UpdateProductRequest request, RequestModel user)
         {
+            if (user.User.Role != GaneshaProgramming.Plugins.User.IServices.Models.Enum.RoleEnum.Admin)
+                throw new Exception("У вас не достаточно прав на внесение изменений");
+
+
             using (var db = new DataContext(_dbOptions))
             {
                 var product = await db.Products.FirstOrDefaultAsync(c => c.Id == request.ProductId);

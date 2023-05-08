@@ -46,9 +46,15 @@ namespace Plugins.Pharmacy.Services
                     Count = c.Count,
                     ProductId = c.ProductId,
                     UserId = model.User.UserId,
+                    ResultPrice = c.Count * validProducts.First(h => h.Id == c.ProductId).Price
                 });
 
                 await db.Orders.AddRangeAsync(orders.ToList());
+
+                validProducts.ForEach(c =>
+                {
+                    c.Count -= request.Items.First(h => h.ProductId == c.Id).Count;
+                });
 
                 await db.SaveChangesAsync();
                 return new OrderProductResponse { Ordered = true };

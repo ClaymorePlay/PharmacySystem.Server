@@ -1,4 +1,5 @@
-﻿using PharmacySystem.Server.Models.ProducerModels.Request;
+﻿using CodeEngine.WebSocket.Models.Schema;
+using PharmacySystem.Server.Models.ProducerModels.Request;
 using PharmacySystem.Server.Models.ProducerModels.Response;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,11 @@ namespace Plugins.Pharmacy.IServices.Interfaces
 {
     public interface IProducerService
     {
-        Task<CreateProducerResponse> CreateProducer(CreateProducerRequest request);
+        Task<CreateProducerResponse> CreateProducer(CreateProducerRequest request, RequestModel user);
 
-        Task<RemoveProducerResponse> RemoveProducer(RemoveProducerRequest request);
+        Task<RemoveProducerResponse> RemoveProducer(RemoveProducerRequest request, RequestModel user);
 
-        Task<UpdateProducerResponse> UpdateProducer(UpdateProducerRequest request);
+        Task<UpdateProducerResponse> UpdateProducer(UpdateProducerRequest request, RequestModel user);
 
         Task<GetProducerListResponse> GetProducerList(GetProducerListRequest request);
     }

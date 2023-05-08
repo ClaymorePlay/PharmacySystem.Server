@@ -18,6 +18,8 @@ namespace PharmacySystem.Database.Entities
 
         public int Count { get; set; }
 
+        public decimal ResultPrice { get; set; }
+
         public Product Product { get; set;  }
     }
 }
