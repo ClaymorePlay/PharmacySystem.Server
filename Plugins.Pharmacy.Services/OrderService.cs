@@ -32,11 +32,10 @@ namespace Plugins.Pharmacy.Services
         {
             using (var db = new DataContext(_dbOptions))
             {
-                var validProducts = await db.Products.Where(c => request.Items.Select(c => c.ProductId).Contains(c.Id) 
-                    && c.Count >= request.Items.First(h => h.ProductId == c.Id).Count )
+                var validProducts = await db.Products.Where(c => request.Items.Select(c => c.ProductId).Contains(c.Id))
                     .ToListAsync();
 
-                if (validProducts.Count != request.Items.Count)
+                if (validProducts.Count != request.Items.Count || !validProducts.All(c => c.Count >= request.Items.First(h => h.ProductId == c.Id).Count))
                     return new OrderProductResponse { Ordered = false };
 
                 var date = DateTime.Now;
